@@ -63,6 +63,7 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
     val gameUiState by gameViewModel.uiState.collectAsState()
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
 
+
     Column(
         modifier = Modifier
             .statusBarsPadding()
@@ -100,7 +101,8 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = { gameViewModel.checkUserGuess() }
-            ) {
+            )
+            {
                 Text(
                     text = stringResource(R.string.submit),
                     fontSize = 16.sp
@@ -116,6 +118,7 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
                     fontSize = 16.sp
                 )
             }
+
         }
 
         GameStatus(score = gameUiState.score, modifier = Modifier.padding(20.dp))
