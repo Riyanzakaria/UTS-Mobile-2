@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Riwayat::class], version = 1)
+@Database(entities = [Riwayat::class], version = 1, exportSchema = false)
 abstract class RiwayatDb : RoomDatabase() {
     abstract fun riwayatDao(): RiwayatDao
 
