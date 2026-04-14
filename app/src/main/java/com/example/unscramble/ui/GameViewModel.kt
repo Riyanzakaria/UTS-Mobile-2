@@ -33,6 +33,8 @@ import kotlinx.coroutines.flow.update
  */
 class GameViewModel : ViewModel() {
 
+    val historyKataBenar = mutableListOf<String>()
+
     // Game UI state
     private val _uiState = MutableStateFlow(GameUiState())
     val uiState: StateFlow<GameUiState> = _uiState.asStateFlow()
@@ -69,6 +71,9 @@ class GameViewModel : ViewModel() {
      */
     fun checkUserGuess() {
         if (userGuess.equals(currentWord, ignoreCase = true)) {
+            if (!historyKataBenar.contains(userGuess)){
+                historyKataBenar.add(userGuess)
+            }
             // User's guess is correct, increase the score
             // and call updateGameState() to prepare the game for next round
             val updatedScore = _uiState.value.score.plus(SCORE_INCREASE)
