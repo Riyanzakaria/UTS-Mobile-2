@@ -57,12 +57,17 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.unscramble.R
 import com.example.unscramble.ui.theme.UnscrambleTheme
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.example.unscramble.data.Riwayat
 
 @Composable
 fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
+    var dialogRiwayatTerbuka by remember { mutableStateOf(false) }
     val gameUiState by gameViewModel.uiState.collectAsState()
+    val dataRiwayat by gameViewModel.dataRiwayat.collectAsState()
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
-
 
     Column(
         modifier = Modifier
@@ -118,7 +123,15 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
                     fontSize = 16.sp
                 )
             }
-
+            OutlinedButton(
+                onClick = { dialogRiwayatTerbuka = true },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "History / Riwayat",
+                    fontSize = 16.sp
+                )
+            }
         }
 
         GameStatus(score = gameUiState.score, modifier = Modifier.padding(20.dp))
@@ -130,6 +143,42 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
             )
         }
     }
+    if (dialogRiwayatTerbuka) {
+        PopUpRiwayat(
+            listRiwayat = dataRiwayat,
+            tutupDialog = { dialogRiwayatTerbuka = false }
+        )
+    }
+}
+
+@Composable
+private fun PopUpRiwayat(
+    listRiwayat: List<Riwayat>,
+    tutupDialog: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = tutupDialog,
+        title = { Text(text = "Riwayat Permainan") },
+        text = {
+            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                if (listRiwayat.isEmpty()) {
+                    Text(text = "Belum ada riwayat.")
+                } else {
+                    listRiwayat.forEachIndexed { i, riwayat ->
+                        Text(
+                            text = "${i + 1}. Kata: [${riwayat.kumpulan_kata}] | Skor: ${riwayat.skor_akhir}",
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = tutupDialog) {
+                Text("Tutup")
+            }
+        }
+    )
 }
 
 @Composable
